@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,75 +12,89 @@ using System.Windows.Forms;
 
 namespace tapsiriq______4
 {
+ 
     public partial class Form1 : Form
     {
         public Form1()
         {
             InitializeComponent();
+         
+
         }
-        class Product
+        List<ProductUC> products = new List<ProductUC>() {};
+        List<Product> option = new List<Product>();
+
+
+
+        private void Form1_Load(object sender, EventArgs e)
         {
-            public Product(string name, double money, int count)
-            {
-                this.name = name;
-                this.money = money;
-                this.count = count;
-            }
-            public Product()
+            var hesabjson = File.ReadAllText("baza.json");
+            if(!string.IsNullOrWhiteSpace(hesabjson))
             {
 
-            }
-            public string name { get; set; }
-            public double money { get; set; }
-            public int count { get; set; }
-            public override string ToString() => $"{name:10}-------{money}------{count}";
-        }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (label_kola.Text != "Bitdi")
-            {
-                double number = double.Parse(label_kola.Text);
-                number -= 1;
-                if (number <= 0) label_kola.Text = "Bitdi";
-                else label_kola.Text = number.ToString();
+                option.Add(new Product("Coca-Cola", 1.5, 10, "https://cdn.iconscout.com/icon/premium/png-256-thumb/cocacola-178382.png"));
+                option.Add(new Product("Pepsi", 2.1, 10, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSOFezLgs9hqE8HLuDPYqF2Awm6U2wLUiKgA&usqp=CAU"));
+                option.Add(new Product("Fanta", (3.5), 10, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIifzWgblZmWXfi160v_3vw0gne_R54gDm7A&usqp=CAU"));
+                option.Add(new Product("Ice-tea", 3.5, 10, "https://d2wwnnx8tks4e8.cloudfront.net/images/app/large/5000118047817_3.JPG"));
+                option.Add(new Product("Water", 3.5, 10, "https://camzies.com.ng/wp-content/uploads/2016/09/45.jpg"));
+                option.Add(new Product("Snickers", 5.6, 10, "https://cf.shopee.com.my/file/1ed10246d8a83c0243670bede85e24a0"));
+                option.Add(new Product("Bounty", 2.6, 10, "https://dtgxwmigmg3gc.cloudfront.net/imagery/assets/derivations/icon/256/256/true/eyJpZCI6IjFmMjI5OTQ0ODI4OTg0OGFkMDNhNmVjOGM5YTQ4MGQ4LmpwZyIsInN0b3JhZ2UiOiJwdWJsaWNfc3RvcmUifQ?signature=78e7e64e7ce90bc6725e11090407d0210bf8948f3de8ae589dda4fa1240242a9"));
+                option.Add(new Product("Kit-Kat", 3.1, 10, "https://icon-library.com/images/kitkat-icon/kitkat-icon-16.jpg"));
+                option.Add(new Product("7 Days Croissant", 7.2, 10, "https://www.kindpng.com/picc/m/154-1543152_double-croissant-7-days-croissant-max-hd-png.png"));
+                option.Add(new Product("Twix", 5.6, 10, "https://icon2.cleanpng.com/20180409/rue/kisspng-twix-chocolate-bar-mars-milk-candy-cookie-5acb2e3281ce00.2273096315232650745317.jpg"));
+                option.Add(new Product("M&M", 2.4, 10, "https://images.heb.com/is/image/HEBGrocery/000121396?fit=constrain,1&wid=800&hei=800&fmt=jpg&qlt=85,0&resMode=sharp2&op_usm=1.75,0.3,2,0"));
+                option.Add(new Product("Oreo", 1.6, 10, "https://digitalcontent.api.tesco.com/v2/media/ghs/e6b2e65a-cd7d-41cc-87a5-1c4108950f6b/3603d539-4f25-4273-930f-f790d22b9195_1014455455.jpeg?h=540&w=540"));
+
+
+                int x = 0;
+                int y = 0;
+
+                for (int i = 0; i < option.Count; i++)
+                {
+                    ProductUC lazim = new ProductUC(ref SEBET);
+                    lazim.button_name.Text = option[i].name;
+                    lazim.pictureBox1.LoadAsync($@"{option[i].image}");
+                    lazim.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                    lazim.odenilmeli = label_odenilmeli;
+                    lazim.label_qiymet.Text = option[i].money.ToString();
+
+                    if (i % 3 == 0 && i != 0)
+                    {
+
+                        y += 400;
+                        x = 0;
+
+                        lazim.Location = new Point(x, y);
+                    }
+                    else if (i == 0)
+                    {
+                        lazim.Location = new Point(x, y);
+                    }
+                    else
+                    {
+
+                        x += 200;
+                        lazim.Location = new Point(x, y);
+                    }
+                    products.Add(lazim);
+                    Controls.Add(lazim);
+                }
             }
             else
             {
-                return;
+                products = JsonConvert.DeserializeObject<List<ProductUC>>(hesabjson);
             }
            
-          
-         
-            int option=0;
-            
-            Product lazim=new Product(button_kola.Text, double.Parse(label_kolaqiymet.Text), 1);
-            for (int i = 0; i < SEBET.Items.Count; i++)
-            {
-                if ((SEBET.Items[i] as Product).name == lazim.name)
-                {
 
-                    Product a = SEBET.Items[i] as Product;
-                    a.count += 1;
 
-                    SEBET.Items.RemoveAt(i);
-                    SEBET.Items.Insert(i,a);
 
-                    option += 1;
-                }
-            }
-                
-            
-            if (option == 0)
-            {
-                SEBET.Items.Add(lazim);
-            }
 
-            label_odenilmeli.Text = (double.Parse(label_odenilmeli.Text) + double.Parse(label_kolaqiymet.Text)).ToString();
+
+
         }
-
         private void button5_Click(object sender, EventArgs e)
         {
-            textBox_money.Text = (double.Parse(textBox_money.Text)+0.10).ToString();
+            textBox_money.Text = (double.Parse(textBox_money.Text) + 0.10).ToString();
         }
 
         private void button_20_Click(object sender, EventArgs e)
@@ -117,46 +133,7 @@ namespace tapsiriq______4
 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (labelpepsi.Text != "Bitdi")
-            {
-                double number = double.Parse(labelpepsi.Text);
-                number -= 1;
-   
-                if (number <= 0) labelpepsi.Text = "Bitdi";
-                else labelpepsi.Text = number.ToString();
-            }
-            else
-            {
-                return;
-            }
-            int option = 0;
-            
-            Product lazim = new Product(buttonpepsi.Text, double.Parse(labelpepsiqiymeti.Text), 1);
-            for (int i = 0; i < SEBET.Items.Count; i++)
-            {
-                if ((SEBET.Items[i] as Product).name == lazim.name)
-                {
 
-                    Product a = SEBET.Items[i] as Product;
-                    a.count += 1;
-
-                    SEBET.Items.RemoveAt(i);
-                    SEBET.Items.Insert(i, a);
-
-                    option += 1;
-                }
-            }
-
-
-            if (option == 0)
-            {
-                SEBET.Items.Add(lazim);
-            }
-            label_odenilmeli.Text = (double.Parse(label_odenilmeli.Text) + double.Parse(labelpepsiqiymeti.Text)).ToString();
-
-        }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
@@ -165,6 +142,7 @@ namespace tapsiriq______4
             if (daxil > odenilmeli)
             {
                 labelqaliq.Text = (daxil - odenilmeli).ToString();
+                SEBET.Items.Clear();
             }
             else
             {
@@ -177,316 +155,110 @@ namespace tapsiriq______4
             label_daxil.Text = textBox_money.Text;
         }
 
-        private void button_fanta_Click(object sender, EventArgs e)
+
+
+
+
+
+
+
+        private void productUC_Kola_Load(object sender, EventArgs e)
         {
-            if (label_fanta.Text != "Bitdi")
-            {
-                double number = double.Parse(label_fanta.Text);
-                number -= 1;
 
-                if (number <= 0) label_fanta.Text = "Bitdi";
-                else label_fanta.Text = number.ToString();
-            }
-            else
-            {
-                return;
-            }
-            int option = 0;
-
-            Product lazim = new Product(button_fanta.Text, double.Parse(label_fantaqiymeti.Text), 1);
-            for (int i = 0; i < SEBET.Items.Count; i++)
-            {
-                if ((SEBET.Items[i] as Product).name == lazim.name)
-                {
-
-                    Product a = SEBET.Items[i] as Product;
-                    a.count += 1;
-
-                    SEBET.Items.RemoveAt(i);
-                    SEBET.Items.Insert(i, a);
-
-                    option += 1;
-                }
-            }
-
-
-            if (option == 0)
-            {
-                SEBET.Items.Add(lazim);
-            }
-            label_odenilmeli.Text = (double.Parse(label_odenilmeli.Text) + double.Parse(label_fantaqiymeti.Text)).ToString();
         }
 
         private void button16_Click(object sender, EventArgs e)
         {
             double number = 0;
-            for (int i = 0; i < SEBET.Items.Count; i++)
+
+            for (int i = 0; i < products.Count; i++)
             {
-                if((SEBET.Items[i] as Product).name == button_kola.Text)
-                {
-                    number = double.Parse(label_kola.Text);
-                    number += (SEBET.Items[i] as Product).count;
-                    label_kola.Text= number.ToString();
-                }
-                else if ((SEBET.Items[i] as Product).name == button_fanta.Text)
-                {
-                    number = double.Parse(label_fanta.Text);
-                    number += (SEBET.Items[i] as Product).count;
-                    label_fanta.Text = number.ToString();
-                }
-                else if ((SEBET.Items[i] as Product).name == buttonpepsi.Text)
-                {
-                    number = double.Parse(labelpepsi.Text);
-                    number += (SEBET.Items[i] as Product).count;
-                    labelpepsi.Text = number.ToString();
-                }
-                else if ((SEBET.Items[i] as Product).name == button_icetea.Text)
-                {
-                    number = double.Parse(labelicetea.Text);
-                    number += (SEBET.Items[i] as Product).count;
-                    labelicetea.Text = number.ToString();
-                }
-                else if ((SEBET.Items[i] as Product).name == buttonsnickers.Text)
-                {
-                    number = double.Parse(labelsnickers.Text);
-                    number += (SEBET.Items[i] as Product).count;
-                    labelsnickers.Text = number.ToString();
-                }
-                else if ((SEBET.Items[i] as Product).name == buttonbounty.Text)
-                {
-                    number = double.Parse(labelbounty.Text);
-                    number += (SEBET.Items[i] as Product).count;
-                    labelbounty.Text = number.ToString();
+               foreach (var item in SEBET.Items) { 
+                    
+                    number = 0;
+                    if (products[i].button_name.Text==(item as Product).name)
+                    {
+                        
+                        number = double.Parse(products[i].label_count.Text);
+                        number += (item as Product).count;
+                        products[i].label_count.Text = number.ToString();
+                        break;
+
+
+                    }
                 }
             }
+          
+
+                
+       
+
+
             SEBET.Items.Clear();
         }
 
-        private void button_icetea_Click(object sender, EventArgs e)
-        {
-            if (labelicetea.Text != "Bitdi")
-            {
-                double number = double.Parse(labelicetea.Text);
-                number -= 1;
-
-                if (number <= 0) labelicetea.Text = "Bitdi";
-                else labelicetea.Text = number.ToString();
-            }
-            else
-            {
-                return;
-            }
-            int option = 0;
-
-            Product lazim = new Product(button_icetea.Text, double.Parse(label_iceteatqiymeti.Text), 1);
-            for (int i = 0; i < SEBET.Items.Count; i++)
-            {
-                if ((SEBET.Items[i] as Product).name == lazim.name)
-                {
-
-                    Product a = SEBET.Items[i] as Product;
-                    a.count += 1;
-
-                    SEBET.Items.RemoveAt(i);
-                    SEBET.Items.Insert(i, a);
-
-                    option += 1;
-                }
-            }
-
-
-            if (option == 0)
-            {
-                SEBET.Items.Add(lazim);
-            }
-            label_odenilmeli.Text = (double.Parse(label_odenilmeli.Text) + double.Parse(label_iceteatqiymeti.Text)).ToString();
-        }
-
-        private void buttonsnickers_Click(object sender, EventArgs e)
-        {
-            if (labelsnickers.Text != "Bitdi")
-            {
-                double number = double.Parse(labelsnickers.Text);
-                number -= 1;
-
-                if (number <= 0) labelsnickers.Text = "Bitdi";
-                else labelsnickers.Text = number.ToString();
-            }
-            else
-            {
-                return;
-            }
-            int option = 0;
-
-            Product lazim = new Product(buttonsnickers.Text, double.Parse(labelsnickersqiymet.Text), 1);
-            for (int i = 0; i < SEBET.Items.Count; i++)
-            {
-                if ((SEBET.Items[i] as Product).name == lazim.name)
-                {
-
-                    Product a = SEBET.Items[i] as Product;
-                    a.count += 1;
-
-                    SEBET.Items.RemoveAt(i);
-                    SEBET.Items.Insert(i, a);
-
-                    option += 1;
-                }
-            }
-
-
-            if (option == 0)
-            {
-                SEBET.Items.Add(lazim);
-            }
-            label_odenilmeli.Text = (double.Parse(label_odenilmeli.Text) + double.Parse(labelsnickersqiymet.Text)).ToString();
-        }
-
-        private void buttonbounty_Click(object sender, EventArgs e)
-        {
-            if (labelbounty.Text != "Bitdi")
-            {
-                double number = double.Parse(labelbounty.Text);
-                number -= 1;
-
-                if (number <= 0) labelbounty.Text = "Bitdi";
-                else labelbounty.Text = number.ToString();
-            }
-            else
-            {
-                return;
-            }
-            int option = 0;
-
-            Product lazim = new Product(buttonbounty.Text, double.Parse(labelbountyqiymet.Text), 1);
-            for (int i = 0; i < SEBET.Items.Count; i++)
-            {
-                if ((SEBET.Items[i] as Product).name == lazim.name)
-                {
-
-                    Product a = SEBET.Items[i] as Product;
-                    a.count += 1;
-
-                    SEBET.Items.RemoveAt(i);
-                    SEBET.Items.Insert(i, a);
-
-                    option += 1;
-                }
-            }
-
-
-            if (option == 0)
-            {
-                SEBET.Items.Add(lazim);
-            }
-            label_odenilmeli.Text = (double.Parse(label_odenilmeli.Text) + double.Parse(labelbountyqiymet.Text)).ToString();
-        }
-
-        private void button15_Click(object sender, EventArgs e)
+        private void button15_Click_1(object sender, EventArgs e)
         {
             if (SEBET.SelectedItem != null)
             {
-                double number=0;
-            
-                if ((SEBET.SelectedItem as Product).name == button_kola.Text)
+                double number = 0;
+
+                for (int i = 0; i < products.Count; i++)
                 {
-                    if (label_kola.Text == "Bitdi") label_kola.Text = "0";
-                     number = double.Parse(label_kola.Text);
-                    number += (SEBET.SelectedItem as Product).count;
-                    label_kola.Text = number.ToString();
+
+
+                    number = 0;
+                    if (products[i].button_name.Text == (SEBET.SelectedItem as Product).name)
+                    {
+
+                        number = double.Parse(products[i].label_count.Text);
+                        number += (SEBET.SelectedItem as Product).count;
+                        products[i].label_count.Text = number.ToString();
+
+                        break;
+
+
+                    }
+
                 }
-                else if ((SEBET.SelectedItem as Product).name == button_fanta.Text)
-                {
-                    if (label_fanta.Text == "Bitdi") label_fanta.Text = "0";
-                    number = double.Parse(label_fanta.Text);
-                    number += (SEBET.SelectedItem as Product).count;
-                    label_fanta.Text = number.ToString();
-                }
-                else if ((SEBET.SelectedItem as Product).name == buttonpepsi.Text)
-                {           
-                    if (labelpepsi.Text == "Bitdi") labelpepsi.Text = "0";
-                    number = double.Parse(labelpepsi.Text);
-                    number += (SEBET.SelectedItem as Product).count;
-                    labelpepsi.Text = number.ToString();
-                }
-                else if ((SEBET.SelectedItem as Product).name == button_icetea.Text)
-                {
-                    if (labelicetea.Text == "Bitdi") labelicetea.Text = "0";
-                    number = double.Parse(labelicetea.Text);
-                    number += (SEBET.SelectedItem as Product).count;
-                    labelicetea.Text = number.ToString();
-                }
-                else if ((SEBET.SelectedItem as Product).name == buttonsnickers.Text)
-                {
-                    if (labelsnickers.Text == "Bitdi") labelsnickers.Text = "0";
-                    number = double.Parse(labelsnickers.Text);
-                    number += (SEBET.SelectedItem as Product).count;
-                    labelsnickers.Text = number.ToString();
-                }
-                else if ((SEBET.SelectedItem as Product).name == buttonbounty.Text)
-                {
-                    if (labelbounty.Text == "Bitdi") labelbounty.Text = "0";
-                    number = double.Parse(labelbounty.Text);
-                    number += (SEBET.SelectedItem as Product).count;
-                    labelbounty.Text = number.ToString();
-                }
-                SEBET.Items.Remove(SEBET.SelectedItem);
+                SEBET.Items.RemoveAt(SEBET.SelectedIndex);
             }
+
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
             if (SEBET.SelectedItem != null)
             {
                 double number = 0;
                 Product a = new Product();
                 a = SEBET.SelectedItem as Product;
-                a.count--;
-                if (a.count-1 < 0) a.count = 0;
+                a.count++;
+                if (a.count - 1 < 0) a.count = 0;
                 else
                 {
-                    if ((SEBET.SelectedItem as Product).name == button_kola.Text)
+                    for (int i = 0; i < products.Count; i++)
                     {
-                        number = double.Parse(label_kola.Text);
-                        number ++;
-                        label_kola.Text = number.ToString();
+
+
+                        number = 0;
+                        if ((SEBET.SelectedItem as Product).name == products[i].button_name.Text)
+                        {
+                            number = double.Parse(products[i].label_count.Text);
+                            number--;
+                            products[i].label_count.Text = number.ToString();
+                        }
+
+
                     }
-                    else if ((SEBET.SelectedItem as Product).name == button_fanta.Text)
-                    {
-                        number = double.Parse(label_fanta.Text);
-                        number ++ ;
-                        label_fanta.Text = number.ToString();
-                    }
-                    else if ((SEBET.SelectedItem as Product).name == buttonpepsi.Text)
-                    {
-                        number = double.Parse(labelpepsi.Text);
-                        number++;
-                        labelpepsi.Text = number.ToString();
-                    }
-                    else if ((SEBET.SelectedItem as Product).name == button_icetea.Text)
-                    {
-                        number = double.Parse(labelicetea.Text);
-                        number++;
-                        labelicetea.Text = number.ToString();
-                    }
-                    else if ((SEBET.SelectedItem as Product).name == buttonsnickers.Text)
-                    {
-                        number = double.Parse(labelsnickers.Text);
-                        number++;
-                        labelsnickers.Text = number.ToString();
-                    }
-                    else if ((SEBET.SelectedItem as Product).name == buttonbounty.Text)
-                    {
-                        number = double.Parse(labelbounty.Text);
-                        number++;
-                        labelbounty.Text = number.ToString();
-                    }
+
+
 
                 }
                 int index = SEBET.SelectedIndex;
                 SEBET.Items.RemoveAt(index);
                 SEBET.Items.Insert(index, a);
-               
+
                 SEBET.Items.Remove(SEBET.SelectedItem);
             }
         }
@@ -498,46 +270,26 @@ namespace tapsiriq______4
                 double number = 0;
                 Product a = new Product();
                 a = SEBET.SelectedItem as Product;
-                a.count++;
+                a.count--;
                 if (a.count - 1 < 0) a.count = 0;
                 else
                 {
-                    if ((SEBET.SelectedItem as Product).name == button_kola.Text)
+                    for (int i = 0; i < products.Count; i++)
                     {
-                        number = double.Parse(label_kola.Text);
-                        number--;
-                        label_kola.Text = number.ToString();
+
+
+                        number = 0;
+                        if ((SEBET.SelectedItem as Product).name == products[i].button_name.Text)
+                        {
+                            number = double.Parse(products[i].label_count.Text);
+                            number++;
+                            products[i].label_count.Text = number.ToString();
+                        }
+
+
                     }
-                    else if ((SEBET.SelectedItem as Product).name == button_fanta.Text)
-                    {
-                        number = double.Parse(label_fanta.Text);
-                        number--;
-                        label_fanta.Text = number.ToString();
-                    }
-                    else if ((SEBET.SelectedItem as Product).name == buttonpepsi.Text)
-                    {
-                        number = double.Parse(labelpepsi.Text);
-                        number--;
-                        labelpepsi.Text = number.ToString();
-                    }
-                    else if ((SEBET.SelectedItem as Product).name == button_icetea.Text)
-                    {
-                        number = double.Parse(labelicetea.Text);
-                        number--;
-                        labelicetea.Text = number.ToString();
-                    }
-                    else if ((SEBET.SelectedItem as Product).name == buttonsnickers.Text)
-                    {
-                        number = double.Parse(labelsnickers.Text);
-                        number--;
-                        labelsnickers.Text = number.ToString();
-                    }
-                    else if ((SEBET.SelectedItem as Product).name == buttonbounty.Text)
-                    {
-                        number = double.Parse(labelbounty.Text);
-                        number--;
-                        labelbounty.Text = number.ToString();
-                    }
+
+
 
                 }
                 int index = SEBET.SelectedIndex;
@@ -547,5 +299,42 @@ namespace tapsiriq______4
                 SEBET.Items.Remove(SEBET.SelectedItem);
             }
         }
+
+        private void textBox_money_TextChanged_1(object sender, EventArgs e)
+        {
+            label_daxil.Text = textBox_money.Text;
+        }
+
+        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        {
+            var producs = JsonConvert.SerializeObject(products, Newtonsoft.Json.Formatting.Indented);
+
+
+            File.WriteAllText("baza.json", producs);
+        }
+    }
+    public class Product
+    {
+        public Product(string name, double money, int count)
+        {
+            this.name = name;
+            this.money = money;
+            this.count = count;
+        }
+        public Product()
+        {
+
+        }
+
+        public Product(string name, double money, int count, string image) : this(name, money, count)
+        {
+            this.image = image;
+        }
+
+        public string name { get; set; }
+        public double money { get; set; }
+        public int count { get; set; }
+        public string image { get; set; }
+        public override string ToString() => $"{name:10}-------{money}------{count}";
     }
 }
