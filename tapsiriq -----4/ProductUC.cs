@@ -29,7 +29,7 @@ namespace tapsiriq______4
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (label_count.Text != "Bitdi")
+            if (label_count.Text != "Bitdi" && label_count.Text != "0")
             {
                 double number = double.Parse(label_count.Text);
                 number -= 1;

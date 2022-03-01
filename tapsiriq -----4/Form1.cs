@@ -33,31 +33,37 @@ namespace tapsiriq______4
             //var his = File.ReadAllText("history.json");
             //producthistory = JsonConvert.DeserializeObject<List<History>>(his);
 
-
-            var hesabjson = File.ReadAllText("baza.json");
-            option = JsonConvert.DeserializeObject<List<Product>>(hesabjson);
-            if (option.FindAll(n=>/*(n as Product).count.ToString()=="Bitdi" |*/ (n as Product).count== 0).Count>4)
+            if (File.Exists("baza.json") == false)
             {
-                option.Clear();
-                option.Add(new Product("Coca-Cola", 1.5, 10, "https://cdn.iconscout.com/icon/premium/png-256-thumb/cocacola-178382.png"));
-                option.Add(new Product("Pepsi", 2.1, 10, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSOFezLgs9hqE8HLuDPYqF2Awm6U2wLUiKgA&usqp=CAU"));
-                option.Add(new Product("Fanta", (3.5), 10, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIifzWgblZmWXfi160v_3vw0gne_R54gDm7A&usqp=CAU"));
-                option.Add(new Product("Ice-tea", 3.5, 10, "https://d2wwnnx8tks4e8.cloudfront.net/images/app/large/5000118047817_3.JPG"));
-                option.Add(new Product("Water", 3.5, 10, "https://camzies.com.ng/wp-content/uploads/2016/09/45.jpg"));
-                option.Add(new Product("Snickers", 5.6, 10, "https://cf.shopee.com.my/file/1ed10246d8a83c0243670bede85e24a0"));
-                option.Add(new Product("Bounty", 2.6, 10, "https://dtgxwmigmg3gc.cloudfront.net/imagery/assets/derivations/icon/256/256/true/eyJpZCI6IjFmMjI5OTQ0ODI4OTg0OGFkMDNhNmVjOGM5YTQ4MGQ4LmpwZyIsInN0b3JhZ2UiOiJwdWJsaWNfc3RvcmUifQ?signature=78e7e64e7ce90bc6725e11090407d0210bf8948f3de8ae589dda4fa1240242a9"));
-                option.Add(new Product("Kit-Kat", 3.1, 10, "https://icon-library.com/images/kitkat-icon/kitkat-icon-16.jpg"));
-                option.Add(new Product("7 Days Croissant", 7.2, 10, "https://www.kindpng.com/picc/m/154-1543152_double-croissant-7-days-croissant-max-hd-png.png"));
-                option.Add(new Product("Twix", 5.6, 10, "https://icon2.cleanpng.com/20180409/rue/kisspng-twix-chocolate-bar-mars-milk-candy-cookie-5acb2e3281ce00.2273096315232650745317.jpg"));
-                option.Add(new Product("M&M", 2.4, 10, "https://images.heb.com/is/image/HEBGrocery/000121396?fit=constrain,1&wid=800&hei=800&fmt=jpg&qlt=85,0&resMode=sharp2&op_usm=1.75,0.3,2,0"));
-                option.Add(new Product("Oreo", 1.6, 10, "https://digitalcontent.api.tesco.com/v2/media/ghs/e6b2e65a-cd7d-41cc-87a5-1c4108950f6b/3603d539-4f25-4273-930f-f790d22b9195_1014455455.jpeg?h=540&w=540"));
-                option.Add(new Product("Tutku", 1.6, 10, "https://www.bosphorusmarket.com/uploads/1/3/4/0/134063848/s435321757357478238_p1514_i1_w1200.jpeg"));
+                //if (option.FindAll(n =>/*(n as Product).count.ToString()=="Bitdi" |*/ (n as Product).count == 0).Count > 4)
+                //{
+                    option.Clear();
+                    option.Add(new Product("Coca-Cola", 1.5, 10, "https://cdn.iconscout.com/icon/premium/png-256-thumb/cocacola-178382.png"));
+                    option.Add(new Product("Pepsi", 2.1, 10, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSOFezLgs9hqE8HLuDPYqF2Awm6U2wLUiKgA&usqp=CAU"));
+                    option.Add(new Product("Fanta", (3.5), 10, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIifzWgblZmWXfi160v_3vw0gne_R54gDm7A&usqp=CAU"));
+                    option.Add(new Product("Ice-tea", 3.5, 10, "https://d2wwnnx8tks4e8.cloudfront.net/images/app/large/5000118047817_3.JPG"));
+                    option.Add(new Product("Water", 3.5, 10, "https://camzies.com.ng/wp-content/uploads/2016/09/45.jpg"));
+                    option.Add(new Product("Snickers", 5.6, 10, "https://cf.shopee.com.my/file/1ed10246d8a83c0243670bede85e24a0"));
+                    option.Add(new Product("Bounty", 2.6, 10, "https://dtgxwmigmg3gc.cloudfront.net/imagery/assets/derivations/icon/256/256/true/eyJpZCI6IjFmMjI5OTQ0ODI4OTg0OGFkMDNhNmVjOGM5YTQ4MGQ4LmpwZyIsInN0b3JhZ2UiOiJwdWJsaWNfc3RvcmUifQ?signature=78e7e64e7ce90bc6725e11090407d0210bf8948f3de8ae589dda4fa1240242a9"));
+                    option.Add(new Product("Kit-Kat", 3.1, 10, "https://icon-library.com/images/kitkat-icon/kitkat-icon-16.jpg"));
+                    option.Add(new Product("7 Days Croissant", 7.2, 10, "https://www.kindpng.com/picc/m/154-1543152_double-croissant-7-days-croissant-max-hd-png.png"));
+                    option.Add(new Product("Twix", 5.6, 10, "https://icon2.cleanpng.com/20180409/rue/kisspng-twix-chocolate-bar-mars-milk-candy-cookie-5acb2e3281ce00.2273096315232650745317.jpg"));
+                    option.Add(new Product("M&M", 2.4, 10, "https://images.heb.com/is/image/HEBGrocery/000121396?fit=constrain,1&wid=800&hei=800&fmt=jpg&qlt=85,0&resMode=sharp2&op_usm=1.75,0.3,2,0"));
+                    option.Add(new Product("Oreo", 1.6, 10, "https://digitalcontent.api.tesco.com/v2/media/ghs/e6b2e65a-cd7d-41cc-87a5-1c4108950f6b/3603d539-4f25-4273-930f-f790d22b9195_1014455455.jpeg?h=540&w=540"));
+                    option.Add(new Product("Tutku", 1.6, 10, "https://www.bosphorusmarket.com/uploads/1/3/4/0/134063848/s435321757357478238_p1514_i1_w1200.jpeg"));
 
 
 
 
 
+                //}
             }
+            else
+            {
+                var hesabjson = File.ReadAllText("baza.json");
+                option = JsonConvert.DeserializeObject<List<Product>>(hesabjson);
+            }
+            
          
 
 
@@ -176,6 +182,8 @@ namespace tapsiriq______4
                 }
                 var producs = JsonConvert.SerializeObject(option, Newtonsoft.Json.Formatting.Indented);
                 File.WriteAllText("baza.json", producs);
+                label_odenilmeli.Text = "0";
+                label_daxil.Text = "0";
             }
             else
             {
